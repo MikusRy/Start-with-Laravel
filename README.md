@@ -1,6 +1,6 @@
 <div align='center'>
 
-## Start with Laravel
+# Start with Laravel
 
 ### Temat: Portal do publikowania zdjęć.
 
