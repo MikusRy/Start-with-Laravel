@@ -2,10 +2,9 @@
 
 ## Start with Laravel
 
-### Temat:
-Taki niby instagram.
+### Temat: Taki niby instagram.
 
-Aleksander Sinkowski
+Aleksander Sinkowski i Serhii Riznychuk
 </div>
 <div align="justify">
 
