@@ -77,6 +77,20 @@
     height: 1px;
     background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
 }
+.textarea{
+    text-decoration: none;
+    border: none;
+    width: 250px;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    transition: all 250ms;
+}
+.textarea:hover{
+    cursor: text;
+    box-shadow: 1px 1px 5px #aaa, -1px -1px 5px #aaa;
+}
+
 
 /*!
  * Bootstrap v4.0.0 (https://getbootstrap.com)

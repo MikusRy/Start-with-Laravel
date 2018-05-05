@@ -45,6 +45,9 @@
                             <li><a class="nav-link" href="{{ route('login') }}">{{ __('Zaloguj mnie') }}</a></li>
                             <li><a class="nav-link" href="{{ route('register') }}">{{ __('Chcę dołączyć') }}</a></li>
                         @else
+                            @if(Auth::user()->admin == '1')
+                            <li><a class="nav-link" href="{{ route('upload') }}">{{ __('Panel Admina') }}</a></li>
+                            @endif
                             <li><a class="nav-link" href="{{ route('upload') }}">{{ __('Upload') }}</a></li>
                             <li><a class="nav-link" href="{{ route('home') }}">{{ __('Szukaj') }}</a></li>
                             <li class="nav-item dropdown">

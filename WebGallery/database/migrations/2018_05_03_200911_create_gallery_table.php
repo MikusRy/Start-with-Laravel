@@ -21,7 +21,7 @@ class CreateGalleryTable extends Migration
             $table->integer('like');
             $table->integer('unlike');
             $table->integer('view');
-            $table->string('info');
+            $table->string('info')->nullable();
             $table->timestamps();
         });
     }

@@ -17,12 +17,13 @@ class CreateImagesTable extends Migration
             $table->increments('id');
             $table->integer('gallery_id');
             $table->string('file_name');
+            $table->string('pic_name');
             $table->integer('created_by');
             $table->boolean('public');
             $table->integer('like');
             $table->integer('unlike');
             $table->integer('view');
-            $table->string('info');
+            $table->string('info')->nullable();
             $table->timestamps();
         });
     }
