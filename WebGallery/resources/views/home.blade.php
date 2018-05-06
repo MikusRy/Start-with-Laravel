@@ -6,7 +6,7 @@
     <?php
     if (session()->has('path')) {
     } else {
-        session()->put('path', URL::current());
+        session()->put('path', 'http://localhost/Start-with-Laravel/WebGallery/public');
     }
     ?>
 
@@ -35,7 +35,7 @@
                                             Unlike: {{$item->unlike}}
                                         </div>
                                         <div class="galleryinfo">
-                                            {{$item->updated_at}}
+                                            Obrazy: {{$item->items}}
                                         </div>
                                     </a>
                                 </div>

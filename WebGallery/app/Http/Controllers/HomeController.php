@@ -86,16 +86,20 @@ class HomeController extends Controller
                 $tst = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->count();
                 if ($tst == 0) {
                     echo '<br>Create gallery.';
-                    Gallery::create(['name' => $gallery, 'created_by' => Auth::user()->id, 'public' => $gallerypub, 'like' => 0, 'unlike' => 0, 'view' => 0, 'info' => $info]);
+                    Gallery::create(['name' => $gallery, 'created_by' => Auth::user()->id, 'public' => $gallerypub, 'like' => 0, 'unlike' => 0, 'view' => 0, 'items'=>0, 'info' => $info]);
                 }else{
                     echo '<br>Galeria istnieje.';
                 }
             };
             $getGallery = '';
-            $getGallery = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->first()->id;
+            $getGallery = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->first();
+            $items = $getGallery->items;
+            $items++;
+            $getGallery = $getGallery->id;
             echo '<br>Gallery id: ' . $getGallery;
             Image::create(['gallery_id' => $getGallery, 'file_name' => $filename, 'pic_name' => $picname, 'created_by' => Auth::user()->id, 'public' => $picpub, 'like' => 0, 'unlike' => 0, 'view' => 0, 'info' => $komentarz]);
-/*            print "<pre>";
+            Gallery::where('id', '=', $getGallery)->update(['items'=>$items]);
+            /*            print "<pre>";
               print_r($getGallery);
               print "</pre>";
 */

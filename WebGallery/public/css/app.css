@@ -105,6 +105,30 @@
 .textarea{
     min-height: 80px;
 }
+.textarea-simple, .textbox-simple{
+    text-decoration: none;
+    border: none;
+    min-width: 250px;
+    width: 100%;
+    height: auto;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+    transition: all 250ms;
+    box-shadow: 1px 1px 5px #aaa, -1px -1px 5px #aaa;
+    border-radius: 5px;
+}
+.textarea-simple:hover, .textbox-simple:hover{
+    cursor: text;
+}
+.textarea-simple{
+    min-height: 80px;
+}
+.galleryform{
+    min-width: 400px;
+    width: 50%;
+    margin-left: 25%;
+}
 .colorhover{
     transition: all 150ms;
 }

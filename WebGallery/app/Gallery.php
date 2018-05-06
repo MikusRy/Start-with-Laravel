@@ -8,6 +8,6 @@ class Gallery extends Model
 {
     protected $table = 'gallery';
     protected $fillable = [
-        'name', 'created_by', 'public', 'like', 'unlike', 'view', 'info',
+        'name', 'created_by', 'public', 'like', 'unlike', 'view', 'items', 'info',
         ];
 }
