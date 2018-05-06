@@ -77,7 +77,7 @@
                         </form>
                     </details>
                     <hr class="hr">
-                    @if($isimage->count() != 0)
+                    @if($images->count() != 0)
                             <table>
                                 <thead>
                                 <tr>
@@ -116,16 +116,9 @@
                                                         <input class="button" type="submit" name="view"
                                                                value="Wyświetl">
                                                     </li>
-                                                    @if($galleryname->name != 'All')
                                                         <li>
                                                             <input class="button" type="submit" name="del" value="Usuń">
                                                         </li>
-                                                    @else
-                                                        <li>
-                                                            <input class="button" type="submit" name="delfromall"
-                                                                   value="Usuń">
-                                                        </li>
-                                                    @endif
                                                 </ul>
                                             </form>
                                         </td>

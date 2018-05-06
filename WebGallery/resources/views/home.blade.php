@@ -32,21 +32,39 @@
                     <div class="cont-alx">
                         @if($gallery->count()!=0)
                             @foreach($gallery as $item)
-                                <div class="gallerydiv">
-                                    <a class="a" href="{{session()->get('path')}}/gallery/{{$item->id}}">
-                                        <div class="galleryname">
-                                            {{$item->name}}
-                                        </div>
-                                        <div class="gallerypanel">
-                                            Wyświetlenia: {{$item->view}}<br>
-                                            Like: {{$item->like}}<br>
-                                            Unlike: {{$item->unlike}}
-                                        </div>
-                                        <div class="galleryinfo">
-                                            Obrazy: {{$item->items}}
-                                        </div>
-                                    </a>
-                                </div>
+                                @if($item->name == 'All')
+                                    <div class="gallerydiv">
+                                        <a class="a" href="{{session()->get('path')}}/gallery/all">
+                                            <div class="galleryname">
+                                                All
+                                            </div>
+                                            <div class="gallerypanel">
+                                                Galeria<br>
+                                                z wszystkimi<br>
+                                                obrazami
+                                            </div>
+                                            <div class="galleryinfo">
+                                                Updated: {{$item->updated_at}}
+                                            </div>
+                                        </a>
+                                    </div>
+                                @else
+                                    <div class="gallerydiv">
+                                        <a class="a" href="{{session()->get('path')}}/gallery/{{$item->id}}">
+                                            <div class="galleryname">
+                                                {{$item->name}}
+                                            </div>
+                                            <div class="gallerypanel">
+                                                Wyświetlenia: {{$item->view}}<br>
+                                                Like: {{$item->like}}<br>
+                                                Unlike: {{$item->unlike}}
+                                            </div>
+                                            <div class="galleryinfo">
+                                                Obrazy: {{$item->items}}
+                                            </div>
+                                        </a>
+                                    </div>
+                                @endif
                             @endforeach
                         @else
                             <h3 style="padding:50px 50px 25px 50px;">Aktualnie brak albumów...</h3>

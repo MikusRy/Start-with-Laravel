@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Faker\Provider\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
@@ -86,7 +87,7 @@ class HomeController extends Controller
 //            Funkcja tworzy galerię All jeśli takowej nie ma
             $all = Gallery::where('name', '=', 'All')->where('created_by', '=', Auth::user()->id)->count();
             if ($all == 0) {
-                echo '<br>Create gallery.';
+//              Create new gallery 'All'
                 Gallery::create([
                     'name' => 'All',
                     'created_by' => Auth::user()->id,
@@ -97,13 +98,10 @@ class HomeController extends Controller
                     'items' => 0,
                     'info' => 'Galeria ze wszystkimi obrazami.'
                 ]);
-            };
-
-//                Funkcja tworzy nową galerię do której zostanie przypisane zdjęcie
-            if ($selectgallery == 'new') {
+            }elseif ($selectgallery == 'new') {
                 $tst = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->count();
                 if ($tst == 0) {
-                    echo '<br>Create gallery.';
+//                  Create new gallery
                     Gallery::create([
                         'name' => $gallery,
                         'created_by' => Auth::user()->id,
@@ -116,33 +114,9 @@ class HomeController extends Controller
                     ]);
                 };
             }
-            $getGallery = '';
             $getGallery = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->first();
-            $items = $getGallery->items;
-            $items++;
+            $items = $getGallery->items + 1;
             $getGallery = $getGallery->id;
-            echo '<br>Gallery id: ' . $getGallery;
-
-//                Dla albumu all
-            $allid = Gallery::where('name', '=', 'All')->where('created_by', '=', Auth::user()->id)->first();
-            if ($allid->id != $getGallery) {
-                Image::create([
-                    'gallery_id' => $allid->id,
-                    'file_name' => $filename,
-                    'pic_name' => $picname,
-                    'created_by' => Auth::user()->id,
-                    'like' => 0,
-                    'unlike' => 0,
-                    'view' => 0,
-                    'publish' => $selectpublishimg,
-                    'licence' => $selectlicenceimg,
-                    'blacklist' => 0,
-                    'info' => $komentarz]);
-
-                $allitems = $allid->items;
-                $allitems++;
-                Gallery::where('id', '=', $allid->id)->update(['items' => $allitems]);
-            }
 
 //                  Dla albumu nowego lub wybranego
             Image::create([
@@ -173,14 +147,20 @@ class HomeController extends Controller
     public
     function showgallery($galleryID)
     {
-        $isSomethink = Gallery::where('id', '=', $galleryID)->where('created_by', '=', Auth::user()->id)->get();
-        if ($isSomethink->count() != 0) {
-            $isimage = Image::where('gallery_id', '=', $galleryID)->get();
-            $Images = Image::where('gallery_id', '=', $galleryID)->orderBy('id', 'desc')->get();
+        if ($galleryID == 'all') {
+            $GalleryName = Gallery::where('name', '=', 'all')->where('created_by', '=', Auth::user()->id)->first();
+            if ($GalleryName->count() != 0) {
+                $Images = Image::where('created_by', '=', Auth::user()->id)->orderBy('id', 'desc')->get();
+                return view('showgallery', ['images' => $Images, 'galleryname' => $GalleryName]);
+            }
+        }else {
             $GalleryName = Gallery::where('id', '=', $galleryID)->first();
-            return view('showgallery', ['images' => $Images, 'galleryname' => $GalleryName, 'some' => $isSomethink, 'isimage' => $isimage]);
-        } else {
-            return redirect('/home');
+            if ($GalleryName->count() != 0) {
+                $Images = Image::where('gallery_id', '=', $galleryID)->orderBy('id', 'desc')->get();
+                return view('showgallery', ['images' => $Images, 'galleryname' => $GalleryName]);
+            } else {
+                return redirect('/home');
+            }
         }
     }
 
@@ -226,42 +206,30 @@ class HomeController extends Controller
         } else if (Input::has('del')) {
             $imageid = Input::get('imageid');
             $imagename = Input::get('imagename');
-            $galleryid = Input::get('galleryid');
+
+            $imagedata = Image::where('id', '=', $imageid)->first();
 
             echo $imageid;
             echo $imagename;
-            echo $galleryid;
+            echo $imagedata->gallery_id;
 
-            $items = Gallery::where('id', '=', $galleryid)->first();
-            $items = $items->items;
-            if ($items > 0) {
-                $items--;
+            if (Gallery::where('id', '=', $imagedata->gallery_id)->count() != 0) {
+                $items = Gallery::where('id', '=', $imagedata->gallery_id)->first()->items;
+                    if ($items > 0) {
+                        $items--;
+                    }
+                    echo $items;
+                    Gallery::where('id', '=', $imagedata->gallery_id)->update(['items' => $items]);
             }
-            echo $items;
-            Gallery::where('id', '=', $galleryid)->update(['items' => $items]);
+            $filename = Image::where('id', '=', $imageid)->first();
+            $link3 = public_path() . '\\' . Auth::user()->usercode . '\\' . $filename->file_name;
+            echo $link3;
+            if (file_exists($link3)) {
+                unlink($link3);
+            }
             Image::where('id', '=', $imageid)->delete();
 
             $mess = "Usunięto: " . $imagename;
-        } else if (Input::has('delfromall')) {
-            $imageid = Input::get('imageid');
-            $imagename = Input::get('imagename');
-            $galleryid = Input::get('galleryid');
-
-            echo $imageid;
-            echo $imagename;
-            echo $galleryid;
-
-            $items = Gallery::where('id', '=', $galleryid)->first();
-            $items = $items->items;
-            if ($items > 0) {
-                $items--;
-            }
-            echo $items;
-            Gallery::where('id', '=', $galleryid)->update(['items' => $items]);
-            Image::where('id', '=', $imageid)->delete();
-
-            $mess = "Usunięto: " . $imagename;
-
         } else {
             $mess = "Usp... Coś poszło nie tak :/";
         }
