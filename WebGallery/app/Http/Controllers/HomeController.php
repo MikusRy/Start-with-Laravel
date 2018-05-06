@@ -8,8 +8,9 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Validation\Rules\In;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use Illuminate\Support\Facades\URL;
 use App\Gallery;
-use App\Upload;
+use App\Image;
 
 class HomeController extends Controller
 {
@@ -30,7 +31,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $Gallery = Gallery::where('created_by', Auth::user()->id)->get();
+        return view('home', ['gallery' => $Gallery]);
     }
 
     public function upload()
@@ -79,8 +81,9 @@ class HomeController extends Controller
             echo '<br>Info: ' . $info;
             echo '<br>Public Gallery: ' . $gallerypub;
 
+            if ($gallery == ''){$gallery = 'All';}
             if ($select == 'new') {
-                $tst = Gallery::where('name', '=', $gallery, 'AND', 'created_by', '=', Auth::user())->count();
+                $tst = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->count();
                 if ($tst == 0) {
                     echo '<br>Create gallery.';
                     Gallery::create(['name' => $gallery, 'created_by' => Auth::user()->id, 'public' => $gallerypub, 'like' => 0, 'unlike' => 0, 'view' => 0, 'info' => $info]);
@@ -89,19 +92,32 @@ class HomeController extends Controller
                 }
             };
             $getGallery = '';
-            $getGallery = Gallery::where('name', '=', $gallery, 'AND', 'created_by', '=', Auth::user()->id)->first()->id;
+            $getGallery = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->first()->id;
             echo '<br>Gallery id: ' . $getGallery;
-            Upload::create(['gallery_id' => $getGallery, 'file_name' => $filename, 'pic_name' => $picname, 'created_by' => Auth::user()->id, 'public' => $picpub, 'like' => 0, 'unlike' => 0, 'view' => 0, 'info' => $komentarz]);
+            Image::create(['gallery_id' => $getGallery, 'file_name' => $filename, 'pic_name' => $picname, 'created_by' => Auth::user()->id, 'public' => $picpub, 'like' => 0, 'unlike' => 0, 'view' => 0, 'info' => $komentarz]);
 /*            print "<pre>";
               print_r($getGallery);
               print "</pre>";
 */
             $file->move(Auth::user()->usercode, $filename);
-            $mess = 'Plik został wysłany!';
+            $mess = 'Plik: ' . $picname . ', dodano do galerii: ' . $gallery . '.';
         } else {
             $mess = 'Nie wybrano pliku!';
         }
 
         return redirect('upload')->with('status', $mess);
+    }
+
+
+    public function showgallery($galleryID)
+    {
+        $isSomethink = Gallery::where('id', '=', $galleryID)->where('created_by', '=', Auth::user()->id)->get();
+        if($isSomethink->count() != 0) {
+            $Images = Image::where('gallery_id', '=', $galleryID)->get();
+            $GalleryName = Gallery::where('id', '=', $galleryID)->first();
+            return view('showgallery', ['images' => $Images, 'galleryname' => $GalleryName, 'some' => $isSomethink]);
+        }else{
+            return redirect('/home');
+        }
     }
 }

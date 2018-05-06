@@ -15,10 +15,11 @@
 //    return view('welcome');
 //});
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('index');
 
 Auth::routes();
 
+Route::get('/gallery/{galleryID}', 'HomeController@showgallery')->name('showgallery');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/upload', 'HomeController@upload')->name('upload');
 Route::post('/uploadfile', 'HomeController@uploadfile')->name('uploadfile');

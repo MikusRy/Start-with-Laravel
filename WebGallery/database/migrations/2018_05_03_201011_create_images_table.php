@@ -23,7 +23,7 @@ class CreateImagesTable extends Migration
             $table->integer('like');
             $table->integer('unlike');
             $table->integer('view');
-            $table->string('info')->nullable();
+            $table->text('info')->nullable();
             $table->timestamps();
         });
     }

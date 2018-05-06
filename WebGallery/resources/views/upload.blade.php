@@ -27,11 +27,11 @@
                             <br>
                             <br>
                             <div class="checkbox">
-                                <label style="cursor: pointer"><input style="cursor: pointer" type="checkbox"
-                                                                      name="picpriv" class="cur"> Zaznacz obraz jako
+                                <label style="cursor: pointer"  class="colorhover"><input style="cursor: pointer" type="checkbox"
+                                                                                          name="picpriv" class="cur"> Zaznacz obraz jako
                                     prywatny</label>
                             </div>
-                            <input type="text" class="textarea" name="newname"
+                            <input type="text" class="textbox" name="newname"
                                    placeholder="Tu możesz podać nową nazwę...">
                             <br>
                             <textarea class="textarea" name="comment" placeholder="A tu swój komentarz..."></textarea>
@@ -61,11 +61,11 @@
                             if (value == 'new') {
                                 document.getElementById('newgallery').innerHTML = '' +
                                     '<br>' +
-                                    '<input class="textarea" type="text" name="newgallery" placeholder="Nazwa galerii...">' +
+                                    '<input class="textbox" type="text" name="newgallery" placeholder="Nazwa nowej galerii..." pattern=".{3,}">' +
                                     '<br>' +
                                     '<textarea class="textarea" name="info" placeholder="Jeśli chcesz, to tu wstaw opis galerii..."></textarea>' +
                                     '<div class="checkbox">' +
-                                    '<label style="cursor: pointer">' +
+                                    '<label style="cursor: pointer" class="colorhover">' +
                                     '<input style="cursor: pointer" type="checkbox" name="gallerypriv" class="cur"> Zaznacz jako galeria prywatna' +
                                     '</label></div>';
                             } else {
