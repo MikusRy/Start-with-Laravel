@@ -21,23 +21,36 @@
 
                             <h1>Dodaj fotkę!</h1>
                             <hr class="hr">
-                            <label>Wybierz obraz do przesłania:</label>
-                            <br><input class="margintop10 border-alx" type="file" name="file" id="file"
+                            <h5><b>Wybierz obraz do przesłania</b></h5>
+                            <input class="margintop10 border-alx" type="file" name="file" id="file"
                                        accept="image/*">
                             <br>
                             <br>
-                            <div class="checkbox">
-                                <label style="cursor: pointer"  class="colorhover"><input style="cursor: pointer" type="checkbox"
-                                                                                          name="picpriv" class="cur"> Zaznacz obraz jako
-                                    prywatny</label>
-                            </div>
+                            <label>Opcje udostępnienia pliku:</label>
+                            <br>
+                            <select id="selectpublish" class="onselect" name="selectpublishimg">
+                                <option value="publiczny">Publiczny</option>
+                                <option value="prywatny">Prywatny</option>
+                                <option value="zalogowani">Dla zarejestrowanych</option>
+                                <option value="wybrani">Prywatny z wyjątkami</option>
+                            </select>
+                            <br>
+                            <br>
+                            <label>Zasada wykorzystania:</label>
+                            <br>
+                            <select id="selectlicence" class="onselect" name="selectlicenceimg">
+                                <option value="Brak">Brak</option>
+                                <option value="CC BY">Uznanie autorstwa</option>
+                                <option value="CC BY-NC">Użycie niekomercyjne</option>
+                            </select>
+                            <br>
+                            <br>
                             <input type="text" class="textbox" name="newname"
                                    placeholder="Tu możesz podać nową nazwę...">
                             <br>
                             <textarea class="textarea" name="comment" placeholder="A tu swój komentarz..."></textarea>
                             <br>
-                            <label>Wybierz galerię:</label>
-                            <br>
+                            <h5><b>Wybierz galerię</b></h5>
                             <select id="selectgallery" class="onselect" name="selectgallery"
                                     onchange="gallerycheck()">
                                 <option value="new">Nowa galeria</option>
@@ -64,10 +77,15 @@
                                     '<input class="textbox" type="text" name="newgallery" placeholder="Nazwa nowej galerii..." pattern=".{3,}">' +
                                     '<br>' +
                                     '<textarea class="textarea" name="info" placeholder="Jeśli chcesz, to tu wstaw opis galerii..."></textarea>' +
-                                    '<div class="checkbox">' +
-                                    '<label style="cursor: pointer" class="colorhover">' +
-                                    '<input style="cursor: pointer" type="checkbox" name="gallerypriv" class="cur"> Zaznacz jako galeria prywatna' +
-                                    '</label></div>';
+                                    '<br>\n' +
+                                    '<label>Opcje udostępnienia albumu:</label>\n' +
+                                    '<br>' +
+                                    '<select id="selectpublish" class="onselect" name="selectpublishgallery">\n' +
+                                    '<option value="publiczny">Publiczny</option>\n' +
+                                    '<option value="prywatny">Prywatny</option>\n' +
+                                    '<option value="zalogowani">Dla zarejestrowanych</option>\n' +
+                                    '<option value="wybrani">Prywatny z wyjątkami</option>\n' +
+                                    '</select><br>';
                             } else {
                                 document.getElementById('newgallery').innerHTML = '';
                             }

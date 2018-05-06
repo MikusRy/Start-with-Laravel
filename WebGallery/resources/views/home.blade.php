@@ -18,6 +18,14 @@
                             -</h2>
                     </div>
                     <br>
+
+                    <div class="card-body">
+                        @if (session('status'))
+                            <div class="alert alert-success">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                    </div>
                     <br>
                     <h1 align="center">Albumy ze zdjęciami!</h1>
                     <hr class="hr">
@@ -42,14 +50,6 @@
                             @endforeach
                         @else
                             <h3 style="padding:50px 50px 25px 50px;">Aktualnie brak albumów...</h3>
-                        @endif
-                    </div>
-
-                    <div class="card-body">
-                        @if (session('status'))
-                            <div class="alert alert-success">
-                                {{ session('status') }}
-                            </div>
                         @endif
                     </div>
                 </div>

@@ -19,10 +19,12 @@ class CreateImagesTable extends Migration
             $table->string('file_name');
             $table->string('pic_name');
             $table->integer('created_by');
-            $table->boolean('public');
             $table->integer('like');
             $table->integer('unlike');
             $table->integer('view');
+            $table->string('publish');
+            $table->string('licence');
+            $table->boolean('blacklist');
             $table->text('info')->nullable();
             $table->timestamps();
         });

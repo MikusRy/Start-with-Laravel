@@ -17,7 +17,7 @@ class CreateGalleryTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->integer('created_by');
-            $table->boolean('public');
+            $table->string('publish');
             $table->integer('like');
             $table->integer('unlike');
             $table->integer('view');

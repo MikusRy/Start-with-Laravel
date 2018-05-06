@@ -20,6 +20,9 @@ Route::get('/', 'HomeController@index')->name('index');
 Auth::routes();
 
 Route::get('/gallery/{galleryID}', 'HomeController@showgallery')->name('showgallery');
+Route::get('/gallery', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/upload', 'HomeController@upload')->name('upload');
 Route::post('/uploadfile', 'HomeController@uploadfile')->name('uploadfile');
+Route::post('/updategallery', 'HomeController@updategallery')->name('updategallery');
+Route::post('/updateimg', 'HomeController@updateimg')->name('updateimg');
