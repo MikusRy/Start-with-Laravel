@@ -36,13 +36,23 @@ class HomeController extends Controller
         return view('home', ['gallery' => $Gallery]);
     }
 
+    /**
+     * Zwrasa stronę z formem uploadu
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     */
     public function upload()
     {
         $Gallery = Gallery::where('created_by', Auth::user()->id)->get();
         return view('upload', ['gallery' => $Gallery]);
     }
 
-
+    /**
+     * Skrypt tworzy album lub wrzuca dane o zdjęciu
+     * do istniejącego oraz przesyła plik na server
+     * w odpowiednim miejscu
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function uploadfile()
     {
         echo 'Podsumowanie:<br>';
@@ -67,18 +77,21 @@ class HomeController extends Controller
             $picname = $filename;
             $filename = time() . '-' . $filename;
 
-            echo '<br>Selected gallery: ' . $selectgallery;
-            echo '<br>New name: ' . $newname;
-            echo '<br>New gallery: ' . $newgallery;
-            echo '<br>--------------------------';
-            echo '<br>File name: ' . $filename;
-            echo '<br>Pic name: ' . $picname;
-            echo '<br>Komnetarz: ' . $komentarz;
-            echo '<br>Publikacja: ' . $selectpublishimg;
-            echo '<br>Licencja: ' . $selectlicenceimg;
-            echo '<br>Gallery: ' . $gallery;
-            echo '<br>Info: ' . $info;
-            echo '<br>Publikacja: ' . $selectpublishgallery;
+//            echo postów
+            /*
+                echo '<br>Selected gallery: ' . $selectgallery;
+                echo '<br>New name: ' . $newname;
+                echo '<br>New gallery: ' . $newgallery;
+                echo '<br>--------------------------';
+                echo '<br>File name: ' . $filename;
+                echo '<br>Pic name: ' . $picname;
+                echo '<br>Komnetarz: ' . $komentarz;
+                echo '<br>Publikacja: ' . $selectpublishimg;
+                echo '<br>Licencja: ' . $selectlicenceimg;
+                echo '<br>Gallery: ' . $gallery;
+                echo '<br>Info: ' . $info;
+                echo '<br>Publikacja: ' . $selectpublishgallery;
+            */
 
             if ($gallery == '') {
                 $gallery = 'All';
@@ -98,7 +111,7 @@ class HomeController extends Controller
                     'items' => 0,
                     'info' => 'Galeria ze wszystkimi obrazami.'
                 ]);
-            }elseif ($selectgallery == 'new') {
+            } elseif ($selectgallery == 'new') {
                 $tst = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->count();
                 if ($tst == 0) {
 //                  Create new gallery
@@ -143,9 +156,7 @@ class HomeController extends Controller
         return redirect('upload')->with('status', $mess);
     }
 
-
-    public
-    function showgallery($galleryID)
+    public function showgallery($galleryID)
     {
         if ($galleryID == 'all') {
             $GalleryName = Gallery::where('name', '=', 'all')->where('created_by', '=', Auth::user()->id)->first();
@@ -153,7 +164,7 @@ class HomeController extends Controller
                 $Images = Image::where('created_by', '=', Auth::user()->id)->orderBy('id', 'desc')->get();
                 return view('showgallery', ['images' => $Images, 'galleryname' => $GalleryName]);
             }
-        }else {
+        } else {
             $GalleryName = Gallery::where('id', '=', $galleryID)->first();
             if ($GalleryName->count() != 0) {
                 $Images = Image::where('gallery_id', '=', $galleryID)->orderBy('id', 'desc')->get();
@@ -164,8 +175,7 @@ class HomeController extends Controller
         }
     }
 
-    public
-    function updategallery()
+    public function updategallery()
     {
         if (Input::has('edit')) {
             $galleryid = Input::get('galleryid');
@@ -194,8 +204,7 @@ class HomeController extends Controller
         return redirect()->back()->with(['status' => $mess]);
     }
 
-    public
-    function updateimg()
+    public function updateimg()
     {
         if (Input::has('view')) {
             $imageid = Input::get('imageid');
@@ -215,11 +224,11 @@ class HomeController extends Controller
 
             if (Gallery::where('id', '=', $imagedata->gallery_id)->count() != 0) {
                 $items = Gallery::where('id', '=', $imagedata->gallery_id)->first()->items;
-                    if ($items > 0) {
-                        $items--;
-                    }
-                    echo $items;
-                    Gallery::where('id', '=', $imagedata->gallery_id)->update(['items' => $items]);
+                if ($items > 0) {
+                    $items--;
+                }
+                echo $items;
+                Gallery::where('id', '=', $imagedata->gallery_id)->update(['items' => $items]);
             }
             $filename = Image::where('id', '=', $imageid)->first();
             $link3 = public_path() . '\\' . Auth::user()->usercode . '\\' . $filename->file_name;
