@@ -46,6 +46,6 @@ wybranych
 >* [ ] Blokowanie zdjęcia użytkownika
 >* [ ] Usunięcie zdjęcia użytkownika
 
-* Statystyki oglądalności dla zdjęć / albumówg
->* [ ] Inkrementacja wyświetleń
+* Statystyki oglądalności dla zdjęć / albumów
+>* [ ] Iteracja wyświetleń
 >* [x] Wyświetlenie ilosć wyświetleń zdjęcia / albumu
