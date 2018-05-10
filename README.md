@@ -15,8 +15,10 @@ do publikowania zdjęć. Portal powinien umożliwić:
 >* [x] Rejestracja
 >* [x] Logowanie
 >* [x] Odzyskanie hasła
->* [ ] Zmiana hasła
->* [ ] Usunięcie konta
+>* [x] Zmiana hasła
+>* [x] Zmiana Nicku
+>* [x] Usunięcie konta
+>* [ ] Usunięcie plików konta
 
 * Dodawanie i edycję nowych zdjęć wraz z komentarzami autora oraz zasadami wykorzystania
 >* [x] Dodawanie zdjęć

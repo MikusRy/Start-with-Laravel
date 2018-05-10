@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Faker\Provider\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Illuminate\Support\Facades\URL;
 use App\Gallery;
 use App\Image;
+use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
 {
@@ -34,6 +36,52 @@ class HomeController extends Controller
     {
         $Gallery = Gallery::where('created_by', Auth::user()->id)->get();
         return view('home', ['gallery' => $Gallery]);
+    }
+
+    /**
+     * Zwraca strone ze zmiana hasla, nickname'u oraz mozliwoscia zamkniecia konta
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function sittings()
+    {
+     $mess = '';
+        if (Input::has('newnick')) {
+            $newnickname = Input::get('newnickname');
+            User::where('id', Auth::user()->id)->update(['name' => $newnickname]);
+            $mess = 'Zmiana nicku zakończona sukcesem!';
+            return redirect('sittings')->with('status', $mess);
+        }elseif (Input::has('passwd')){
+            $newpass1 = Input::get('newpass1');
+            $newpass2 = Input::get('newpass2');
+
+            if ($newpass1 == $newpass2){
+                User::where('id', Auth::user()->id)->update(['password' => Hash::make($newpass1)]);
+                $mess = "Zmiana hasła zakończona powodzeniem";
+            }else ($mess = "Coś poszło nie tak. Zostaje stare hasło.");
+            return redirect('sittings')->with('status', $mess);
+        }elseif (Input::has('delacc')){
+            $mail = Input::get('mail');
+            if ($mail == Auth::user()->email) {
+                /*$dirpath = '\\' . Auth::user()->usercode;
+                if (is_dir($dirpath)) {
+                    $mess = $dirpath;
+                    rmdir(dirpath);
+                    Gallery::where('id',Auth::user()->id)->delete();
+                    Image::where('id',Auth::user()->id)->delete();
+                    User::where('id',Auth::user()->id)->delete();
+                    return redirect('/login');
+                }else{*/
+                    Gallery::where('id',Auth::user()->id)->delete();
+                    Image::where('id',Auth::user()->id)->delete();
+                    User::where('id',Auth::user()->id)->delete();
+                    return redirect('/login');
+//                }
+            }else {
+                $mess = 'To nie ten mail.';
+            }
+            return redirect('sittings')->with('status', $mess);
+        }
+        return view('sittings');
     }
 
     /**
@@ -244,4 +292,5 @@ class HomeController extends Controller
         }
         return redirect()->back()->with(['status' => $mess]);
     }
+
 }

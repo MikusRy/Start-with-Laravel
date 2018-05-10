@@ -57,14 +57,21 @@
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 {{ Auth::user()->name }} <span class="caret"></span>
                             </a>
-
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('sittings') }}"
+                                   onclick="event.preventDefault();
+                                                     document.getElementById('sittings-form').submit();">
+                                    {{ __('Ustawienia') }}
+                                </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                     {{ __('Wyloguj') }}
                                 </a>
-
+                                <form id="sittings-form" action="{{ route('sittings') }}" method="POST"
+                                      style="display: none;">
+                                    @csrf
+                                </form>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                       style="display: none;">
                                     @csrf
