@@ -105,6 +105,7 @@
                                             </ul>
                                         </td>
                                         <td>
+
                                             <form action="{{URL::to('updateimg')}}"
                                                   method="post">
                                                 <input type="hidden" name="imageid" value="{{$item->id}}">
@@ -113,10 +114,12 @@
                                                 <input type="hidden" value="{{csrf_token()}}" name="_token">
                                                 <ul>
                                                     <li>
+                                                        {{--przekazuję do updateimg id obrazu po czym zwracam odpowiedni widok--}}
                                                         <input class="button" type="submit" name="view"
                                                                value="Wyświetl">
                                                     </li>
                                                         <li>
+                                                            {{--przekazuję do updateimg dane obrazu po czym usuwam z bazy oraz folderu--}}
                                                             <input class="button" type="submit" name="del" value="Usuń">
                                                         </li>
                                                 </ul>

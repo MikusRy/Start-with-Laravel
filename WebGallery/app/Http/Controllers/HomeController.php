@@ -19,7 +19,6 @@ class HomeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
      * @return void
      */
     public function __construct()
@@ -28,8 +27,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
-     *
+     * Wyświetlenie galerii
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -40,29 +38,50 @@ class HomeController extends Controller
 
     /**
      * Zwraca strone ze zmiana hasla, nickname'u oraz mozliwoscia zamkniecia konta
+     * Akcje:
+     * - Zmiana nickname
+     * - Zmiana hasła
+     * - Zamknięcie konta
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function sittings()
     {
      $mess = '';
         if (Input::has('newnick')) {
+            /**
+             * Zmiana nickname
+             */
             $newnickname = Input::get('newnickname');
             User::where('id', Auth::user()->id)->update(['name' => $newnickname]);
             $mess = 'Zmiana nicku zakończona sukcesem!';
             return redirect('sittings')->with('status', $mess);
         }elseif (Input::has('passwd')){
+            /**
+             * Zmiana hasła
+             */
             $newpass1 = Input::get('newpass1');
             $newpass2 = Input::get('newpass2');
 
             if ($newpass1 == $newpass2){
                 User::where('id', Auth::user()->id)->update(['password' => Hash::make($newpass1)]);
                 $mess = "Zmiana hasła zakończona powodzeniem";
-            }else ($mess = "Coś poszło nie tak. Zostaje stare hasło.");
+            }else (
+                /**
+                 * Wiadomość w razie błędu
+                 */
+                $mess = "Coś poszło nie tak. Zostaje stare hasło."
+            );
             return redirect('sittings')->with('status', $mess);
         }elseif (Input::has('delacc')){
+            /**
+             * Usunięcie konta użytkownika po wprowadzeniu dobrego email'u
+             */
             $mail = Input::get('mail');
             if ($mail == Auth::user()->email) {
-                /*$dirpath = '\\' . Auth::user()->usercode;
+                /**
+                 * Nieaktywny moduł usuwania katalogu przy usunięciu użytkownika
+                 * Problem w tym że nie usuwa katalogu :/
+                $dirpath = '\\' . Auth::user()->usercode;
                 if (is_dir($dirpath)) {
                     $mess = $dirpath;
                     rmdir(dirpath);
@@ -70,12 +89,12 @@ class HomeController extends Controller
                     Image::where('id',Auth::user()->id)->delete();
                     User::where('id',Auth::user()->id)->delete();
                     return redirect('/login');
-                }else{*/
+                 }
+                 */
                     Gallery::where('id',Auth::user()->id)->delete();
                     Image::where('id',Auth::user()->id)->delete();
                     User::where('id',Auth::user()->id)->delete();
                     return redirect('/login');
-//                }
             }else {
                 $mess = 'To nie ten mail.';
             }
@@ -85,9 +104,8 @@ class HomeController extends Controller
     }
 
     /**
-     * Zwrasa stronę z formem uploadu
+     * Zwraca stronę z formem uploadu
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     *
      */
     public function upload()
     {
@@ -96,9 +114,9 @@ class HomeController extends Controller
     }
 
     /**
-     * Skrypt tworzy album lub wrzuca dane o zdjęciu
-     * do istniejącego oraz przesyła plik na server
-     * w odpowiednim miejscu
+     * Tworzenie albumu
+     * Przypisanie zdjęcia do albumu
+     * Przesłanie zdjęcia do folderu o nazwie == usercode
      * @return \Illuminate\Http\RedirectResponse
      */
     public function uploadfile()
@@ -111,44 +129,37 @@ class HomeController extends Controller
             $selectpublishgallery = Input::get('selectpublishgallery');
             $selectpublishimg = Input::get('selectpublishimg');
             $selectlicenceimg = Input::get('selectlicenceimg');
-
+            /**
+             * Jeśli wprowadzono nową nazwę dla zdjęcia to zmień
+             */
             $newname = Input::get('newname');
             ($newname != '') ? $filename = $newname . '.' . $file->getClientOriginalExtension() : $newname = $newname;
-
+            /**
+             * Jeśli wybrano nową galerię i nie wprowadzono danych to zdjęcie trafi do domyślnej 'All',
+             */
             $newgallery = Input::get('newgallery');
             ($selectgallery == 'new') ? ($newgallery != '') ? $gallery = $newgallery : $gallery = 'all' : $gallery = $selectgallery;
-
             $komentarz = Input::get('comment');
-
             $info = Input::get('info');
-
             $picname = $filename;
+            /**
+             * Ustawienie indywidualnej nazwy pliku (nie nazwy zdjęcia)
+             */
             $filename = time() . '-' . $filename;
-
-//            echo postów
-            /*
-                echo '<br>Selected gallery: ' . $selectgallery;
-                echo '<br>New name: ' . $newname;
-                echo '<br>New gallery: ' . $newgallery;
-                echo '<br>--------------------------';
-                echo '<br>File name: ' . $filename;
-                echo '<br>Pic name: ' . $picname;
-                echo '<br>Komnetarz: ' . $komentarz;
-                echo '<br>Publikacja: ' . $selectpublishimg;
-                echo '<br>Licencja: ' . $selectlicenceimg;
-                echo '<br>Gallery: ' . $gallery;
-                echo '<br>Info: ' . $info;
-                echo '<br>Publikacja: ' . $selectpublishgallery;
-            */
-
+            /**
+             * jeśli nazwa galerii jest pusta to przypisze domyślną 'All'
+             */
             if ($gallery == '') {
                 $gallery = 'All';
             }
-
-//            Funkcja tworzy galerię All jeśli takowej nie ma
+            /**
+             * Funkcja tworzy galerię All jeśli takowej nie ma
+             */
             $all = Gallery::where('name', '=', 'All')->where('created_by', '=', Auth::user()->id)->count();
             if ($all == 0) {
-//              Create new gallery 'All'
+                /**
+                 * Stworzenie galerii 'All'
+                 */
                 Gallery::create([
                     'name' => 'All',
                     'created_by' => Auth::user()->id,
@@ -162,7 +173,10 @@ class HomeController extends Controller
             } elseif ($selectgallery == 'new') {
                 $tst = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->count();
                 if ($tst == 0) {
-//                  Create new gallery
+                    /**
+                     * Stworzenie nowej galerii o podanych
+                     * przez użytkownika parametrach
+                     */
                     Gallery::create([
                         'name' => $gallery,
                         'created_by' => Auth::user()->id,
@@ -175,11 +189,15 @@ class HomeController extends Controller
                     ]);
                 };
             }
+            /**
+             * Przygotowanie iteracji ilości zdjęć w galerii do której trafi zdjęcie
+             */
             $getGallery = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->first();
             $items = $getGallery->items + 1;
             $getGallery = $getGallery->id;
-
-//                  Dla albumu nowego lub wybranego
+            /**
+             * Stworzenie danych zdjęcia w DB
+             */
             Image::create([
                 'gallery_id' => $getGallery,
                 'file_name' => $filename,
@@ -192,10 +210,14 @@ class HomeController extends Controller
                 'licence' => $selectlicenceimg,
                 'blacklist' => 0,
                 'info' => $komentarz]);
-
+            /**
+             * Po dodaniu zdjęcia do galerii iterazcja ilości zdjęć
+             */
             Gallery::where('id', '=', $getGallery)->update(['items' => $items]);
+            /**
+             * Upload zdjęcia do odpowiedniego folderu w public
+             */
             $file->move(Auth::user()->usercode, $filename);
-
             $mess = 'Plik: ' . $picname . ', dodano do galerii: ' . $gallery . '.';
         } else {
             $mess = 'Nie wybrano pliku!';
@@ -204,17 +226,32 @@ class HomeController extends Controller
         return redirect('upload')->with('status', $mess);
     }
 
+    /**
+     * Wyświetla zawartość wybranej galerii
+     * All to galeria wszystkich zdjęć
+     * @param $galleryID
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     */
     public function showgallery($galleryID)
     {
         if ($galleryID == 'all') {
+            /**
+             * Wyświetlenie wszystkich zdjęć użytkownika
+             */
             $GalleryName = Gallery::where('name', '=', 'all')->where('created_by', '=', Auth::user()->id)->first();
             if ($GalleryName->count() != 0) {
                 $Images = Image::where('created_by', '=', Auth::user()->id)->orderBy('id', 'desc')->get();
                 return view('showgallery', ['images' => $Images, 'galleryname' => $GalleryName]);
             }
         } else {
-            $GalleryName = Gallery::where('id', '=', $galleryID)->first();
-            if ($GalleryName->count() != 0) {
+            /**
+             * Wyświetlenie zdjęć wybranej galerii
+             */
+            $Gallery = Gallery::where('id', '=', $galleryID)->first();
+            if ($Gallery->count() != 0) {
+                /**
+                 * Wyświetl jeśli galeria istnieje
+                 */
                 $Images = Image::where('gallery_id', '=', $galleryID)->orderBy('id', 'desc')->get();
                 return view('showgallery', ['images' => $Images, 'galleryname' => $GalleryName]);
             } else {
@@ -223,26 +260,35 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * Update galerii
+     * Usuwanie galerii
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updategallery()
     {
         if (Input::has('edit')) {
+            /**
+             * Edycja danych galerii
+             */
             $galleryid = Input::get('galleryid');
             $galleryname = Input::get('galleryname');
             $galleryinfo = Input::get('galleryinfo');
             $gallerypublish = Input::get('gallerypublish');
-
-            echo '<br>Gallery Name: ' . $galleryname;
-            echo '<br>Gallery Info: ' . $galleryinfo;
-            echo '<br>Gallery Publish: ' . $gallerypublish;
-            echo '<br>Gallery ID: ' . $galleryid;
-
+            /**
+             * Update informacji o galerii
+             */
             Gallery::where('id', '=', $galleryid)->update(['name' => $galleryname, 'info' => $galleryinfo, 'publish' => $gallerypublish,]);
-
             $mess = "Pomyślnie zapisano zmiany w albumie: " . $galleryname . ".";
         } else if (Input::has('del')) {
+            /**
+             * Usuwanie galerii
+             */
             $galleryid = Input::get('galleryid');
             $galleryname = Input::get('galleryname');
-
+            /**
+             * Usunięcie galerii z DB
+             */
             Gallery::where('id', '=', $galleryid)->delete();
             $mess = "Usunięto album: " . $galleryname;
             return redirect('/')->with(['status' => $mess]);
@@ -252,40 +298,65 @@ class HomeController extends Controller
         return redirect()->back()->with(['status' => $mess]);
     }
 
+    /**
+     * Wyświetlanie obrazu
+     * Usuwanie orazu
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function updateimg()
     {
         if (Input::has('view')) {
+            /**
+             *
+             * funkcja odpowiada za przekierowanie do wyświetlenia
+             * wybranego obrazu wraz ze szczegółami
+             *
+             */
             $imageid = Input::get('imageid');
-            $imagename = Input::get('imagename');
-            $galleryid = Input::get('galleryid');
-
-            $mess = "Pomyślnie zapisano zmiany w albumie: " . $imagename . ".";
+            /**
+             * Pobranie danych o zdjęciu
+             */
+            $image = Image::where('id', $imageid)->first();
+            return view('imgview', ['$image'=>$image]);
         } else if (Input::has('del')) {
+            /**
+             *
+             * Usuwanie zdjęć z DB oraz odpowiedniego folderu
+             *
+             */
             $imageid = Input::get('imageid');
             $imagename = Input::get('imagename');
-
             $imagedata = Image::where('id', '=', $imageid)->first();
-
-            echo $imageid;
-            echo $imagename;
-            echo $imagedata->gallery_id;
-
+            /**
+             * Przy usunięciu zdjęcia, zmiana ilości zdjęć w albumie
+             */
             if (Gallery::where('id', '=', $imagedata->gallery_id)->count() != 0) {
                 $items = Gallery::where('id', '=', $imagedata->gallery_id)->first()->items;
                 if ($items > 0) {
                     $items--;
                 }
                 echo $items;
+                /**
+                 * Update ilości zdjęć w albumie
+                 */
                 Gallery::where('id', '=', $imagedata->gallery_id)->update(['items' => $items]);
             }
+            /**
+             * Generowanie linku do pliku (ścieżka usuwania)
+             */
             $filename = Image::where('id', '=', $imageid)->first();
             $link3 = public_path() . '\\' . Auth::user()->usercode . '\\' . $filename->file_name;
             echo $link3;
+            /**
+             * Usunięcie zdjęcia z folderu
+             */
             if (file_exists($link3)) {
                 unlink($link3);
             }
+            /**
+             * Usunięcie zdjęcia z DB
+             */
             Image::where('id', '=', $imageid)->delete();
-
             $mess = "Usunięto: " . $imagename;
         } else {
             $mess = "Usp... Coś poszło nie tak :/";
