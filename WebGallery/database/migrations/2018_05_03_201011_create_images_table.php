@@ -26,6 +26,7 @@ class CreateImagesTable extends Migration
             $table->string('licence');
             $table->boolean('blacklist');
             $table->text('info')->nullable();
+            $table->boolean('comments');
             $table->timestamps();
         });
     }

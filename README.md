@@ -24,6 +24,7 @@ do publikowania zdjęć. Portal powinien umożliwić:
 >* [x] Dodawanie zdjęć
 >* [x] Dodawanie komentarza autora
 >* [x] Dodawanie zasad wykorzystania
+>* [x] Usunięcie zdjęcia
 >* [ ] Edycja danych zdjęcia
 
 * Grupowanie zdjęć w albumy
@@ -34,11 +35,15 @@ do publikowania zdjęć. Portal powinien umożliwić:
 * Ustalanie dostępności każdego zdjęcia/albumu da wszystkich/tylko dla zarejestrowanych/dla
 wybranych
 >* [x] Ustawienie zasad wyświetlania zdjęcia / albumu
->* [ ] Wyświetlanie zdjęć / albumów dla właściciela
->* [ ] Wyświetlanie zdjęć / albumów na podstawie zasad dostępności
+>* [x] Wyświetlanie zdjęć właścicielowi
+>* [x] Wyświetlanie albumów właścicielowi
+>* [ ] Wyświetlanie zdjęć publicznie
+>* [ ] Wyświetlanie zdjęć na podstawie zasad dostępności
+>* [ ] Wyświetlenie albumów publicznie
+>* [ ] Wyświetlenie albumów na podstawie zasad dostępności
 
 * Ustalenie możliwości komentowania i ocenienia dla zdjęcia/albumu
->* [ ] Włącz / wyłącz komentarze / ocenę
+>* [x] Włącz / wyłącz komentarze / ocenę
 >* [ ] Dodaj / Usuń komentarz / ocenę
 >* [ ] Edytuj komentarz / ocenę
 

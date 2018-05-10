@@ -60,7 +60,7 @@
                                                 Unlike: {{$item->unlike}}
                                             </div>
                                             <div class="galleryinfo">
-                                                Obrazy: {{$item->items}}
+                                                Updated: {{$item->updated_at}}
                                             </div>
                                         </a>
                                     </div>

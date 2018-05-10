@@ -193,7 +193,6 @@ class HomeController extends Controller
              * Przygotowanie iteracji ilości zdjęć w galerii do której trafi zdjęcie
              */
             $getGallery = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->first();
-            $items = $getGallery->items + 1;
             $getGallery = $getGallery->id;
             /**
              * Stworzenie danych zdjęcia w DB
@@ -209,11 +208,8 @@ class HomeController extends Controller
                 'publish' => $selectpublishimg,
                 'licence' => $selectlicenceimg,
                 'blacklist' => 0,
-                'info' => $komentarz]);
-            /**
-             * Po dodaniu zdjęcia do galerii iterazcja ilości zdjęć
-             */
-            Gallery::where('id', '=', $getGallery)->update(['items' => $items]);
+                'info' => $komentarz,
+                'comments' => 0]);
             /**
              * Upload zdjęcia do odpowiedniego folderu w public
              */
@@ -238,10 +234,10 @@ class HomeController extends Controller
             /**
              * Wyświetlenie wszystkich zdjęć użytkownika
              */
-            $GalleryName = Gallery::where('name', '=', 'all')->where('created_by', '=', Auth::user()->id)->first();
-            if ($GalleryName->count() != 0) {
+            $Gallery = Gallery::where('name', '=', 'all')->where('created_by', '=', Auth::user()->id)->first();
+            if ($Gallery->count() != 0) {
                 $Images = Image::where('created_by', '=', Auth::user()->id)->orderBy('id', 'desc')->get();
-                return view('showgallery', ['images' => $Images, 'galleryname' => $GalleryName]);
+                return view('showgallery', ['images' => $Images, 'galleryname' => $Gallery]);
             }
         } else {
             /**
@@ -253,7 +249,7 @@ class HomeController extends Controller
                  * Wyświetl jeśli galeria istnieje
                  */
                 $Images = Image::where('gallery_id', '=', $galleryID)->orderBy('id', 'desc')->get();
-                return view('showgallery', ['images' => $Images, 'galleryname' => $GalleryName]);
+                return view('showgallery', ['images' => $Images, 'galleryname' => $Gallery]);
             } else {
                 return redirect('/home');
             }
@@ -305,6 +301,7 @@ class HomeController extends Controller
      */
     public function updateimg()
     {
+
         if (Input::has('view')) {
             /**
              *
@@ -317,7 +314,10 @@ class HomeController extends Controller
              * Pobranie danych o zdjęciu
              */
             $image = Image::where('id', $imageid)->first();
-            return view('imgview', ['$image'=>$image]);
+            $gallery = Gallery::where('id', $image->gallery_id)->first();
+            $gallerylist = Gallery::where('created_by', Auth::user()->id)->get();
+            ($image->comments == true)? $checked = 'checked' : $checked = '' ;
+            return view('imgview', ['image'=>$image, 'gallery'=>$gallery, 'gallerylist'=>$gallerylist, 'checked'=>$checked]);
         } else if (Input::has('del')) {
             /**
              *
@@ -326,21 +326,6 @@ class HomeController extends Controller
              */
             $imageid = Input::get('imageid');
             $imagename = Input::get('imagename');
-            $imagedata = Image::where('id', '=', $imageid)->first();
-            /**
-             * Przy usunięciu zdjęcia, zmiana ilości zdjęć w albumie
-             */
-            if (Gallery::where('id', '=', $imagedata->gallery_id)->count() != 0) {
-                $items = Gallery::where('id', '=', $imagedata->gallery_id)->first()->items;
-                if ($items > 0) {
-                    $items--;
-                }
-                echo $items;
-                /**
-                 * Update ilości zdjęć w albumie
-                 */
-                Gallery::where('id', '=', $imagedata->gallery_id)->update(['items' => $items]);
-            }
             /**
              * Generowanie linku do pliku (ścieżka usuwania)
              */
@@ -358,10 +343,16 @@ class HomeController extends Controller
              */
             Image::where('id', '=', $imageid)->delete();
             $mess = "Usunięto: " . $imagename;
+            if (Input::has('viewpage')){
+                return redirect('/')->with(['status' => $mess]);
+            }else {
+                return redirect()->back()->with(['status' => $mess]);
+            }
         } else {
             $mess = "Usp... Coś poszło nie tak :/";
+            return redirect()->back()->with(['status' => $mess]);
         }
-        return redirect()->back()->with(['status' => $mess]);
+        return redirect()->back();
     }
 
 }

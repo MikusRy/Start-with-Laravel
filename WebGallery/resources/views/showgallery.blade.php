@@ -38,7 +38,6 @@
                                       placeholder="Brak opisu...">{{$galleryname->info}}</textarea>
                             <br>
                             <div class="d-flex justify-content-around">
-                                <div>Obrazy: {{$galleryname->items}}</div>
                                 <div>Wyświetlenia: {{$galleryname->view}}</div>
                                 <div>Like: {{$galleryname->like}}</div>
                                 <div>Unlike: {{$galleryname->unlike}}</div>

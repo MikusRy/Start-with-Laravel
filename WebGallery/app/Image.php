@@ -19,5 +19,6 @@ class Image extends Model
         'licence',
         'blacklist',
         'info',
+        'comments',
     ];
 }
