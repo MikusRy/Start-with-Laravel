@@ -43,7 +43,7 @@
                                         <input type="hidden" name="viewpage" value="true">
                                         <input type="hidden" value="{{csrf_token()}}" name="_token">
 
-                                        <button class="button" style="width: 300px;" type="submit" name="edit">
+                                        <button class="button" style="width: 300px;" type="button" name="edit">
                                             Edytuj dane zdjęcia
                                         </button>
                                     </form>
