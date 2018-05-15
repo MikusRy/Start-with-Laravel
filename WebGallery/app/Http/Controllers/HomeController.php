@@ -170,7 +170,8 @@ class HomeController extends Controller
                     'items' => 0,
                     'info' => 'Galeria ze wszystkimi obrazami.'
                 ]);
-            } elseif ($selectgallery == 'new') {
+            }
+            if ($selectgallery == 'new') {
                 $tst = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->count();
                 if ($tst == 0) {
                     /**
@@ -189,16 +190,12 @@ class HomeController extends Controller
                     ]);
                 };
             }
-            /**
-             * Przygotowanie iteracji ilości zdjęć w galerii do której trafi zdjęcie
-             */
             $getGallery = Gallery::where('name', '=', $gallery)->where('created_by', '=', Auth::user()->id)->first();
-            $getGallery = $getGallery->id;
             /**
              * Stworzenie danych zdjęcia w DB
              */
             Image::create([
-                'gallery_id' => $getGallery,
+                'gallery_id' => $getGallery->id,
                 'file_name' => $filename,
                 'pic_name' => $picname,
                 'created_by' => Auth::user()->id,
@@ -352,7 +349,64 @@ class HomeController extends Controller
             $mess = "Usp... Coś poszło nie tak :/";
             return redirect()->back()->with(['status' => $mess]);
         }
+
         return redirect()->back();
     }
+
+    /**
+     * Edycja danych zdjęcia
+     * @return string
+     */
+    function editimg(){
+        if (Input::get('name')) {
+            $kacz = 'Działa: ' . Input::get('id') . ' ' . Input::get('name') . ' ' .
+                Input::get('info') . ' ' . Input::get('licence') . ' ' .
+                Input::get('publish') . ' ' . Input::get('comments');
+            Image::where('id', (int)Input::get('id'))->update([
+                'pic_name' => Input::get('name'),
+                'info' => Input::get('info'),
+                'licence' => Input::get('licence'),
+                'publish' => Input::get('publish'),
+                'comments' => (boolean)Input::get('comments'),
+            ]);
+            return $kacz;
+        }else{
+            return 'Nie dziła';
+        }
+    }
+
+
+    function look(){
+        if (Auth::user()->usercode){
+            $newsimg = Image::select('*')
+                ->join('users', 'users.id', '=', 'images.created_by')
+                ->where('publish', 'publiczny')
+                ->orWhere('publish', 'zalogowani')
+                ->get();
+        }else{
+            $newsimg = Image::where('publish', 'publiczny')->orderBy('created_at', 'desc')->get();
+        }
+        return view('news', ['images' => $newsimg]);
+    }
+
+    function usergallery($usercode){
+        $galleryID = explode('-', $usercode);
+        $gallery = '';
+//        return view('lookshowgallery', ['image' => $img, 'gallery' => $gallery]);
+    }
+
+    function picview($usercode, $picname){
+//        return $usercode . '/' . $picID;
+        $img = Image::select('*')
+            ->join('users', 'users.id', '=', 'images.created_by')
+            ->where('usercode', $usercode)
+            ->where('pic_name', $picname)
+            ->first();
+
+        $gallery = Gallery::where('id', $img->gallery_id)->first();
+
+        return view('lookimgview', ['image' => $img, 'gallery' => $gallery]);
+    }
+
 
 }

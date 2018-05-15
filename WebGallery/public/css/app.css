@@ -102,7 +102,7 @@
     cursor: text;
     box-shadow: 1px 1px 5px #aaa, -1px -1px 5px #aaa;
 }
-.textarea-view:disabled{
+.textarea-view:disabled, textbox-view:disabled {
     background-color: #fff;
 }
 .textbox-view{
@@ -152,6 +152,10 @@
 }
 .showimg{
     width: 200px;
+    height: auto;
+}
+.inlookimg{
+    width: 400px;
     height: auto;
 }
 thead{

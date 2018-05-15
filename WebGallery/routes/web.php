@@ -19,6 +19,9 @@ Route::get('/', 'HomeController@index')->name('index');
 
 Auth::routes();
 
+Route::get('/look', 'HomeController@look')->name('look');
+Route::get('/look/{usercode}', 'HomeController@usergallery')->name('usergallery');
+Route::get('/look/{usercode}/{picID}', 'HomeController@picview')->name('picview');
 Route::get('/sittings', 'HomeController@sittings')->name('sittings');
 Route::post('/sittings', 'HomeController@sittings')->name('sittings');
 Route::get('/gallery/{galleryID}', 'HomeController@showgallery')->name('showgallery');
@@ -28,3 +31,4 @@ Route::get('/upload', 'HomeController@upload')->name('upload');
 Route::post('/uploadfile', 'HomeController@uploadfile')->name('uploadfile');
 Route::post('/updategallery', 'HomeController@updategallery')->name('updategallery');
 Route::post('/updateimg', 'HomeController@updateimg')->name('updateimg');
+Route::post('/editimg', 'HomeController@editimg')->name('editimg');

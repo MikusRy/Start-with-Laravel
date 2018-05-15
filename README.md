@@ -25,7 +25,7 @@ do publikowania zdjęć. Portal powinien umożliwić:
 >* [x] Dodawanie komentarza autora
 >* [x] Dodawanie zasad wykorzystania
 >* [x] Usunięcie zdjęcia
->* [ ] Edycja danych zdjęcia
+>* [x] Edycja danych zdjęcia
 
 * Grupowanie zdjęć w albumy
 >* [x] Dodanie albumu
