@@ -37,7 +37,8 @@ wybranych
 >* [x] Ustawienie zasad wyświetlania zdjęcia / albumu
 >* [x] Wyświetlanie zdjęć właścicielowi
 >* [x] Wyświetlanie albumów właścicielowi
->* [ ] Wyświetlanie zdjęć publicznie
+>* [ ] Wyświetlanie zdjęć publicznie dla niezalogowanych
+>* [x] Wyświetlanie zdjęć publicznie i dla zalogowanych
 >* [ ] Wyświetlanie zdjęć na podstawie zasad dostępności
 >* [ ] Wyświetlenie albumów publicznie
 >* [ ] Wyświetlenie albumów na podstawie zasad dostępności
@@ -56,3 +57,6 @@ wybranych
 * Statystyki oglądalności dla zdjęć / albumów
 >* [ ] Iteracja wyświetleń
 >* [x] Wyświetlenie ilosć wyświetleń zdjęcia / albumu
+
+## Zamykam projekt bo mam -4
+### Dziękuję za uwagę  ```¯\_(ツ)_/¯```
